@@ -14,21 +14,20 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 function HomeScreen({ navigation }){
   return (
-    <>
-    <ScrollView style={styles.cardList}>
-      <View>
-        <Text>Home Screen</Text>
-      </View>
-    </ScrollView>
-    <View style={[styles.bottomBar, styles.elevation,styles.shadowProp]}>
-      <Pressable onPress={()=>{navigation.navigate('Camera')}}>
-        <View style={styles.circle}>
-          <Text style={styles.buttonText}>SCAN</Text>
+    <View style={StyleSheet.absoluteFill}>
+      <ScrollView style={styles.cardList}>
+        <View>
+          <Text>Home Screen</Text>
         </View>
-      </Pressable>
+      </ScrollView>
+      <View style={[styles.bottomBar, styles.elevation,styles.shadowProp]}>
+        <Pressable onPress={()=>{navigation.navigate('Camera')}}>
+          <View style={styles.circle}>
+            <Text style={styles.buttonText}>SCAN</Text>
+          </View>
+        </Pressable>
+      </View>
     </View>
-    </>
-    
   )
 }
 
