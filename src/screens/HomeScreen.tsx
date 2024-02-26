@@ -7,6 +7,12 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen(props:HomeScreenProps){
+
+  const goToCardScreen = () => {
+    console.log("goToCardScreen");
+    props.navigation.navigate('Card');
+  }
+  
   return (
     <View style={StyleSheet.absoluteFill}>
       <ScrollView style={styles.cardList}>
@@ -15,7 +21,7 @@ export default function HomeScreen(props:HomeScreenProps){
         </View>
       </ScrollView>
       <View style={[styles.bottomBar, styles.elevation,styles.shadowProp]}>
-        <Pressable onPress={()=>{props.navigation.navigate('Card')}}>
+        <Pressable onPress={()=>{goToCardScreen()}}>
           <View style={styles.circle}>
             <Text style={styles.buttonText}>SCAN</Text>
           </View>

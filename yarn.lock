@@ -6676,6 +6676,11 @@ vision-camera-cropper@^0.1.1:
   resolved "https://registry.npmmirror.com/vision-camera-cropper/-/vision-camera-cropper-0.1.1.tgz"
   integrity sha512-WJP1kKZHuk9zFzAUifDq1lSoUmNg56oYF3YNGUeSurGj9h3CtpDXTVW4g6LyqM/Vwi4Kemvs9o7C616z6Htarw==
 
+vision-camera-dynamsoft-label-recognizer@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.npmmirror.com/vision-camera-dynamsoft-label-recognizer/-/vision-camera-dynamsoft-label-recognizer-1.2.0.tgz"
+  integrity sha512-50KbX3AnR80B2Qf9L6um7Ys9TZQKUHiK+n/Md5RxlvzPXmevLhJUTjKZwEo7sZm5g1UBmQFWGlaq80enkDtzwQ==
+
 vlq@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmmirror.com/vlq/-/vlq-1.0.1.tgz"
