@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, Platform } from "react-native";
 import Svg, { Rect } from "react-native-svg";
-import { Camera, useCameraDevice, useCameraFormat } from "react-native-vision-camera";
+import { Camera, useCameraDevice, useCameraFormat, useFrameProcessor } from "react-native-vision-camera";
+import { useSharedValue } from "react-native-worklets-core";
+import { CropRegion, crop } from "vision-camera-cropper";
 
 export default function CameraScreen(){
   const [hasPermission, setHasPermission] = useState(false);
@@ -17,10 +19,11 @@ export default function CameraScreen(){
     width: 80,
     height: 30
   });
-  const [shouldTake,setShouldTake] = useState(false);
+  const cropRegionShared = useSharedValue<undefined|CropRegion>(undefined);
+  const shouldTake = useSharedValue(false);
   const [pressed,setPressed] = useState(false);
   const capture = () => {
-    setShouldTake(true);
+    shouldTake.value=true;
   }
 
   const adaptCropRegionForIDCard = () => {
@@ -35,6 +38,7 @@ export default function CameraScreen(){
       height:height
     };
     setCropRegion(region);
+    cropRegionShared.value = region;
   }
 
   const getViewBox = () => {
@@ -48,6 +52,22 @@ export default function CameraScreen(){
     return size;
   }
 
+  const onCaptured = (base64:string) => {
+    console.log(base64);
+  }
+
+  const onCapturedJS = Worklets.createRunInJsFn(onCaptured);
+  const frameProcessor = useFrameProcessor((frame) => {
+    'worklet';
+    if (shouldTake.value == true && cropRegionShared.value != undefined) {
+      shouldTake.value = false;
+      const result = crop(frame,{cropRegion:cropRegion,includeImageBase64:true,saveAsFile:false});
+      if (result.base64) {
+        onCapturedJS(result.base64);
+      }
+    }
+  }, []);
+  
   useEffect(() => {
     (async () => {
       const status = await Camera.requestCameraPermission();
@@ -67,6 +87,7 @@ export default function CameraScreen(){
           isActive={isActive}
           device={device}
           format={format}
+          frameProcessor={frameProcessor}
           pixelFormat='yuv'
         />
          <Svg preserveAspectRatio={(Platform.OS == 'ios') ? '':'xMidYMid slice'} style={StyleSheet.absoluteFill} viewBox={getViewBox()}>
