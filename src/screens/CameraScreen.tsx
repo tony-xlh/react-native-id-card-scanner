@@ -1,14 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable } from "react-native";
+import { Camera, useCameraDevice, useCameraFormat } from "react-native-vision-camera";
 
 export default function CameraScreen(){
+  const [hasPermission, setHasPermission] = useState(false);
+  const [isActive,setIsActive] = useState(true);
+  const device = useCameraDevice("back");
+  const format = useCameraFormat(device, [
+    { videoResolution: { width: 1920, height: 1080 } },
+    { fps: 30 }
+  ])
   const [shouldTake,setShouldTake] = useState(false);
   const [pressed,setPressed] = useState(false);
   const capture = () => {
     setShouldTake(true);
   }
+  useEffect(() => {
+    (async () => {
+      const status = await Camera.requestCameraPermission();
+      setHasPermission(status === 'granted');
+      setIsActive(true);
+    })();
+  }, []);
+  
   return (
     <View style={StyleSheet.absoluteFill}>
+      {device != null &&
+      hasPermission && (
+      <>
+        <Camera
+          style={StyleSheet.absoluteFill}
+          isActive={isActive}
+          device={device}
+          format={format}
+          pixelFormat='yuv'
+        />
+      </>
+      )}
       <View style={[styles.bottomBar]}>
         <Pressable 
           onPressIn={()=>{setPressed(true)}}
