@@ -5,7 +5,12 @@ import { Camera, useCameraDevice, useCameraFormat, useFrameProcessor } from "rea
 import { useSharedValue } from "react-native-worklets-core";
 import { CropRegion, crop } from "vision-camera-cropper";
 
-export default function CameraScreen(){
+export interface CameraScreenProps {
+  route:any;
+  navigation:any;
+}
+
+export default function CameraScreen(props:CameraScreenProps){
   const [hasPermission, setHasPermission] = useState(false);
   const [isActive,setIsActive] = useState(true);
   const device = useCameraDevice("back");
@@ -53,7 +58,16 @@ export default function CameraScreen(){
   }
 
   const onCaptured = (base64:string) => {
-    console.log(base64);
+    setIsActive(false);
+    if (props) {
+      if (props.navigation) {
+        props.navigation.navigate({
+          name: 'Home',
+          params: { base64: base64 },
+          merge: true,
+        });
+      }
+    }
   }
 
   const onCapturedJS = Worklets.createRunInJsFn(onCaptured);
