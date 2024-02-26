@@ -7,13 +7,6 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen(props:HomeScreenProps){
-  useEffect(() => {
-    if (props.route.params?.base64) {
-      console.log(props.route.params?.base64);
-      console.log("at homescreen")
-    }
-  }, [props.route.params?.base64]);
-
   return (
     <View style={StyleSheet.absoluteFill}>
       <ScrollView style={styles.cardList}>
@@ -22,7 +15,7 @@ export default function HomeScreen(props:HomeScreenProps){
         </View>
       </ScrollView>
       <View style={[styles.bottomBar, styles.elevation,styles.shadowProp]}>
-        <Pressable onPress={()=>{props.navigation.navigate('Camera')}}>
+        <Pressable onPress={()=>{props.navigation.navigate('Card')}}>
           <View style={styles.circle}>
             <Text style={styles.buttonText}>SCAN</Text>
           </View>

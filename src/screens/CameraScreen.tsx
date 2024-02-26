@@ -62,7 +62,7 @@ export default function CameraScreen(props:CameraScreenProps){
     if (props) {
       if (props.navigation) {
         props.navigation.navigate({
-          name: 'Home',
+          name: 'Card',
           params: { base64: base64 },
           merge: true,
         });
