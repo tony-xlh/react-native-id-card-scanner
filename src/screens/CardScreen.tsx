@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { View, StyleSheet, ScrollView, Text, Pressable, Image, Button } from "react-native"
+import { View, StyleSheet, ScrollView, Text, Pressable, Image, Button, TextInput } from "react-native"
+import { ParsedResult } from "../utils/IDCardManager";
 
 interface CardScreenProps {
   route:any;
@@ -10,7 +11,15 @@ export default function CardScreen(props:CardScreenProps){
   const isFrontRef = useRef(false);
   const [frontImageBase64,setFrontImageBase64] = useState("");
   const [backImageBase64,setBackImageBase64] = useState("");
-  
+  const [parsedResult,setParsedResult] = useState<ParsedResult>(
+    {
+      Surname:"",
+      GivenName:"",
+      IDNumber:"",
+      DateOfBirth:"",
+      DateOfExpiry:""
+    }
+  );
   const goToCameraScreen = (isFront:boolean) => {
     isFrontRef.current = isFront;
     props.navigation.navigate('Camera');
@@ -54,6 +63,24 @@ export default function CardScreen(props:CardScreenProps){
       </>
     )
   }
+
+  const Fields = () => {
+    let fieldArray = [];
+    let keys = Object.keys(parsedResult);
+    for (let index = 0; index < keys.length; index++) {
+      let key = keys[index];
+      const value = (parsedResult as any)[key];
+      let view = 
+      <View style={styles.infoField} key={"field-"+key}>
+        <Text style={styles.fieldLabel}>{key+":"}</Text>
+        <TextInput style={styles.fieldInput}/>
+      </View>
+      fieldArray.push(view);
+    }
+    return (
+      fieldArray
+    )
+  }
   
   useEffect(() => {
     if (props.route.params?.base64) {
@@ -71,12 +98,30 @@ export default function CardScreen(props:CardScreenProps){
       <ScrollView>
         {Card({isFront:true})}
         {Card({isFront:false})}
+        <Text style={styles.header}>
+          Info
+        </Text>
+        {Fields()}
       </ScrollView>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  infoField:{
+    flexDirection:"row",
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  fieldLabel:{
+    flex:1/3,
+    alignSelf:"center",
+  },
+  fieldInput:{
+    flex:2/3,
+    borderBottomWidth:0.2,
+    borderBottomColor:"gray",
+  },
   buttonContainer:{
     paddingLeft:10,
     paddingTop:5,
