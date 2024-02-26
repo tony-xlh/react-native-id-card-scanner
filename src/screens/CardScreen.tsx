@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, ScrollView, Text, Pressable, Image, Button, TextInput, Alert } from "react-native"
 import { ParsedResult } from "../utils/IDCardManager";
 import { decodeBase64, initLicense, updateTemplate, useCustomModel } from "vision-camera-dynamsoft-label-recognizer";
+import { parse } from "mrz";
 
 interface CardScreenProps {
   route:any;
@@ -104,11 +105,20 @@ export default function CardScreen(props:CardScreenProps){
     if (result.results.length>0) {
       let lineResults = result.results[0].lineResults;
       if (lineResults.length >= 3) {
-        let text = ""
-        text = text + lineResults[lineResults.length - 3].text + "\n";
-        text = text + lineResults[lineResults.length - 2].text + "\n";
-        text = text + lineResults[lineResults.length - 1].text;
-        console.log(text);
+        let MRZLines = [];
+        MRZLines.push(lineResults[lineResults.length - 3].text);
+        MRZLines.push(lineResults[lineResults.length - 2].text);
+        MRZLines.push(lineResults[lineResults.length - 1].text);
+        console.log(MRZLines);
+        let parsed = parse(MRZLines);
+        let result = {
+          Surname:parsed.fields.lastName ?? "",
+          GivenName:parsed.fields.firstName ?? "",
+          IDNumber:parsed.fields.documentNumber ?? "",
+          DateOfBirth:parsed.fields.birthDate ?? "",
+          DateOfExpiry:parsed.fields.expirationDate ?? ""
+        }
+        setParsedResult(result);
         return;
       }
     }
