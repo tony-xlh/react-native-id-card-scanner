@@ -9,6 +9,11 @@ Frame Processor plugins used:
 * vision-camera-dynamsoft-label-recognizer: use [Dynamsoft Label Recognizer](https://www.dynamsoft.com/label-recognition/overview/) to recognize the MRZ on ID cards.
 
 
+
+https://github.com/xulihang/react-native-id-card-scanner/assets/5462205/110e4f94-cfd5-4980-822a-4c5186e4ffdc
+
+
+
 ## Getting Started
 
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
