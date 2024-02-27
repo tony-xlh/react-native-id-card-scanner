@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, ScrollView, Text, Pressable, Image, Button, TextInput, Alert } from "react-native"
-import { ParsedResult } from "../utils/IDCardManager";
+import { IDCardManager, ParsedResult, ScannedIDCard } from "../utils/IDCardManager";
 import { decodeBase64, initLicense, updateTemplate, useCustomModel } from "vision-camera-dynamsoft-label-recognizer";
 import { parse } from "mrz";
+import { TextButton } from "../components/TextButton";
 
 interface CardScreenProps {
   route:any;
@@ -11,6 +12,7 @@ interface CardScreenProps {
 
 export default function CardScreen(props:CardScreenProps){
   const isFrontRef = useRef(false);
+  const cardKey = useRef("");
   const [frontImageBase64,setFrontImageBase64] = useState("");
   const [backImageBase64,setBackImageBase64] = useState("");
   const [parsedResult,setParsedResult] = useState<ParsedResult>(
@@ -68,6 +70,7 @@ export default function CardScreen(props:CardScreenProps){
 
   const Fields = () => {
     const onChangeText = (key:string,text:string) => {
+      console.log("onChangeText");
       let result:any = JSON.parse(JSON.stringify(parsedResult));
       result[key] = text;
       setParsedResult(result);
@@ -108,6 +111,76 @@ export default function CardScreen(props:CardScreenProps){
     })();
   }, []);
 
+  const saveCard = async () => {
+    console.log("Save Card");
+    let complete = isInfoComplete();
+    if (complete) {
+      let key;
+      if (cardKey.current) {
+        key = parseInt(cardKey.current);
+      }else{
+        key = new Date().getTime();
+        cardKey.current = key.toString();
+      }
+      let card:ScannedIDCard = {
+        frontImage:frontImageBase64,
+        backImage:backImageBase64,
+        info:parsedResult,
+        timestamp:key
+      }
+      //await IDCardManager.saveIDCard(card);
+      Alert.alert("","Saved");
+    }else{
+      Alert.alert("","Card info not complete");
+    }
+  }
+
+  const isInfoComplete = () => {
+    let complete = true;
+    if (!frontImageBase64) {
+      complete = false;
+      console.log("frontImageBase64 empty");
+    }
+    if (!backImageBase64) {
+      complete = false;
+      console.log("backImageBase64 empty");
+    }
+    for (const key in parsedResult) {
+      const value = (parsedResult as any)[key];
+      console.log(key);
+      console.log(value);
+      if (!value) {
+        complete = false;
+        console.log("empty");
+        break;
+      }
+    }
+    return complete;
+  }
+
+  useEffect(() => {
+    // Use `setOptions` to update the button that we previously specified
+    // Now the button includes an `onPress` handler to update the count
+    props.navigation.setOptions({
+      headerRight: () => (
+        <TextButton title="Save" onPress={()=>saveCard()}></TextButton>
+      ),
+    });
+  }, [props.navigation,parsedResult,frontImageBase64,backImageBase64]);
+
+
+  useEffect(() => {
+    if (props.route.params?.base64) {
+      let base64 = props.route.params?.base64; 
+      if (isFrontRef.current === true) {
+        setFrontImageBase64(base64);
+      }else{
+        setBackImageBase64(base64);
+        recognizeIDCard(base64);
+      }
+    }
+  }, [props.route.params?.base64]);
+
   const recognizeIDCard = async (base64:string) => {
     const result = await decodeBase64(base64)
     if (result.results.length>0) {
@@ -126,24 +199,14 @@ export default function CardScreen(props:CardScreenProps){
           DateOfBirth:parsed.fields.birthDate ?? "",
           DateOfExpiry:parsed.fields.expirationDate ?? ""
         }
+        console.log("set parsed result");
+        console.log(result);
         setParsedResult(result);
         return;
       }
     }
     Alert.alert("","Failed to recognize the card.");
   }
-
-  useEffect(() => {
-    if (props.route.params?.base64) {
-      let base64 = props.route.params?.base64; 
-      if (isFrontRef.current === true) {
-        setFrontImageBase64(base64);
-      }else{
-        setBackImageBase64(base64);
-        recognizeIDCard(base64);
-      }
-    }
-  }, [props.route.params?.base64]);
 
   return (
     <View style={StyleSheet.absoluteFill}>
