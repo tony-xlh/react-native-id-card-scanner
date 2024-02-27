@@ -67,6 +67,11 @@ export default function CardScreen(props:CardScreenProps){
   }
 
   const Fields = () => {
+    const onChangeText = (key:string,text:string) => {
+      let result:any = JSON.parse(JSON.stringify(parsedResult));
+      result[key] = text;
+      setParsedResult(result);
+    }
     let fieldArray = [];
     let keys = Object.keys(parsedResult);
     for (let index = 0; index < keys.length; index++) {
@@ -75,7 +80,10 @@ export default function CardScreen(props:CardScreenProps){
       let view = 
       <View style={styles.infoField} key={"field-"+key}>
         <Text style={styles.fieldLabel}>{key+":"}</Text>
-        <TextInput style={styles.fieldInput} value={value}/>
+        <TextInput 
+          style={styles.fieldInput} 
+          onChangeText={(text)=>{onChangeText(key,text)}}
+          value={value}/>
       </View>
       fieldArray.push(view);
     }
