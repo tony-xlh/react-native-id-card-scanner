@@ -128,7 +128,7 @@ export default function CardScreen(props:CardScreenProps){
         info:parsedResult,
         timestamp:key
       }
-      //await IDCardManager.saveIDCard(card);
+      await IDCardManager.saveIDCard(card);
       Alert.alert("","Saved");
     }else{
       Alert.alert("","Card info not complete");

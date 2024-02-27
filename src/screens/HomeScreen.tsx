@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Text, Pressable } from "react-native"
+import { useEffect, useRef, useState } from "react";
+import { View, StyleSheet, ScrollView, Text, Pressable, Modal } from "react-native"
 import { IDCardManager } from "../utils/IDCardManager";
 import { Card } from "../components/Card";
 
@@ -9,12 +9,16 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen(props:HomeScreenProps){
+  const selectedCardKey = useRef("");
   const [cardKeys,setCardKeys] = useState<readonly string[]>([]);
+  const [modalVisible,setModalVisible] = useState(false);
   useEffect(() => {
-    (async () => {
+    const unsubscribe = props.navigation.addListener('focus', async () => {
+      console.log("screen focused");
       setCardKeys(await IDCardManager.getKeys());
-    })();
-  }, []);
+    });
+    return unsubscribe;
+  }, [props.navigation]);
 
   const goToCardScreen = () => {
     console.log("goToCardScreen");
@@ -22,8 +26,8 @@ export default function HomeScreen(props:HomeScreenProps){
   }
 
   const cardPressed = (key:string) => {
-    console.log("cardPressed");
-    console.log(key);
+    selectedCardKey.current = key;
+    setModalVisible(true);
   }
 
   const renderCards = () => {
@@ -34,12 +38,22 @@ export default function HomeScreen(props:HomeScreenProps){
     console.log("renderCards");
     cardKeys.forEach(async cardKey =>  {
       console.log(cardKey);
-      let card = <Card cardKey={cardKey} onPress={()=>cardPressed(cardKey)}></Card>;
+      let card = <Card key={cardKey} cardKey={cardKey} onPress={()=>cardPressed(cardKey)}></Card>;
       cards.push(card);
     });
     if (cards.length>0) {
       return cards;
     }
+  }
+
+  const performAction = async (mode:"delete"|"open") => {
+    if (mode === "delete") {
+      await IDCardManager.deleteIDCard(selectedCardKey.current);
+      setCardKeys(await IDCardManager.getKeys());
+    }else{
+      goToCardScreen();
+    }
+    setModalVisible(!modalVisible);
   }
   
   return (
@@ -54,6 +68,31 @@ export default function HomeScreen(props:HomeScreenProps){
           </View>
         </Pressable>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Please select an action:</Text>
+            <View style={{flexDirection:"row"}}>
+              <Pressable
+                style={styles.button}
+                onPress={() => performAction("open")}>
+                <Text style={styles.textStyle}>Open</Text>
+              </Pressable>
+              <Pressable
+                style={styles.button}
+                onPress={() => performAction("delete")}>
+                <Text style={styles.textStyle}>Delete</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   )
 }
@@ -91,6 +130,43 @@ const styles = StyleSheet.create({
   buttonText:{
     alignSelf:"center",
     color:"white",
-  }
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: '#2196F3',
+    margin:5,
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
 });
 
