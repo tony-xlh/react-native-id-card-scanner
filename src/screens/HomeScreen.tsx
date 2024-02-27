@@ -15,6 +15,7 @@ export default function HomeScreen(props:HomeScreenProps){
   useEffect(() => {
     const unsubscribe = props.navigation.addListener('focus', async () => {
       console.log("screen focused");
+      setCardKeys([]);//force rendering
       setCardKeys(await IDCardManager.getKeys());
     });
     return unsubscribe;
