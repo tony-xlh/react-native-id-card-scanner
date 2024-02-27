@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Text, Pressable } from "react-native"
+import { IDCardManager } from "../utils/IDCardManager";
+import { Card } from "../components/Card";
 
 interface HomeScreenProps {
   route:any;
@@ -7,18 +9,43 @@ interface HomeScreenProps {
 }
 
 export default function HomeScreen(props:HomeScreenProps){
+  const [cardKeys,setCardKeys] = useState<readonly string[]>([]);
+  useEffect(() => {
+    (async () => {
+      setCardKeys(await IDCardManager.getKeys());
+    })();
+  }, []);
 
   const goToCardScreen = () => {
     console.log("goToCardScreen");
     props.navigation.navigate('Card');
   }
+
+  const cardPressed = (key:string) => {
+    console.log("cardPressed");
+    console.log(key);
+  }
+
+  const renderCards = () => {
+    let cards:React.ReactElement[] = [];
+    if (cardKeys.length == 0) {
+      return;
+    }
+    console.log("renderCards");
+    cardKeys.forEach(async cardKey =>  {
+      console.log(cardKey);
+      let card = <Card cardKey={cardKey} onPress={()=>cardPressed(cardKey)}></Card>;
+      cards.push(card);
+    });
+    if (cards.length>0) {
+      return cards;
+    }
+  }
   
   return (
     <View style={StyleSheet.absoluteFill}>
       <ScrollView style={styles.cardList}>
-        <View>
-          <Text>Home Screen</Text>
-        </View>
+        {renderCards()}
       </ScrollView>
       <View style={[styles.bottomBar, styles.elevation,styles.shadowProp]}>
         <Pressable onPress={()=>{goToCardScreen()}}>
