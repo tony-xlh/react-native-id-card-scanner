@@ -22,7 +22,9 @@ export default function HomeScreen(props:HomeScreenProps){
 
   const goToCardScreen = () => {
     console.log("goToCardScreen");
-    props.navigation.navigate('Card');
+    props.navigation.navigate('Card',{
+      cardKey: selectedCardKey.current,
+    });
   }
 
   const cardPressed = (key:string) => {
@@ -62,7 +64,7 @@ export default function HomeScreen(props:HomeScreenProps){
         {renderCards()}
       </ScrollView>
       <View style={[styles.bottomBar, styles.elevation,styles.shadowProp]}>
-        <Pressable onPress={()=>{goToCardScreen()}}>
+        <Pressable onPress={()=>{selectedCardKey.current ="";goToCardScreen()}}>
           <View style={styles.circle}>
             <Text style={styles.buttonText}>SCAN</Text>
           </View>

@@ -24,6 +24,24 @@ export default function CardScreen(props:CardScreenProps){
       DateOfExpiry:""
     }
   );
+
+  useEffect(() => {
+    const init = async () => {
+      console.log(props);
+      let key = props.route.params.cardKey;
+      if (key) {
+        cardKey.current = key;
+        let IDCard = await IDCardManager.getIDCard(key);
+        if (IDCard) {
+          setFrontImageBase64(IDCard.frontImage);
+          setBackImageBase64(IDCard.backImage);
+          setParsedResult(IDCard.info);
+        }
+      }
+    }
+    init()
+  }, []);
+
   const goToCameraScreen = (isFront:boolean) => {
     isFrontRef.current = isFront;
     props.navigation.navigate('Camera');
