@@ -104,7 +104,7 @@ export default function CameraScreen(props:CameraScreenProps){
           frameProcessor={frameProcessor}
           pixelFormat='yuv'
         />
-         <Svg preserveAspectRatio={(Platform.OS == 'ios') ? '':'xMidYMid slice'} style={StyleSheet.absoluteFill} viewBox={getViewBox()}>
+         <Svg preserveAspectRatio='xMidYMid slice' style={StyleSheet.absoluteFill} viewBox={getViewBox()}>
           <Rect 
             x={cropRegion.left/100*getFrameSize().width}
             y={cropRegion.top/100*getFrameSize().height}
