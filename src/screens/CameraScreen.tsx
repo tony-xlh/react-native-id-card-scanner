@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Pressable, Platform } from "react-native";
 import Svg, { Rect } from "react-native-svg";
 import { Camera, useCameraDevice, useCameraFormat, useFrameProcessor } from "react-native-vision-camera";
-import { useSharedValue } from "react-native-worklets-core";
-import { CropRegion, crop } from "vision-camera-cropper";
+import { useSharedValue, Worklets } from "react-native-worklets-core";
+import * as Cropper from "vision-camera-cropper";
+import { CropRegion } from "vision-camera-cropper";
 
 export interface CameraScreenProps {
   route:any;
@@ -11,6 +12,7 @@ export interface CameraScreenProps {
 }
 
 export default function CameraScreen(props:CameraScreenProps){
+  console.log(Cropper);
   const [hasPermission, setHasPermission] = useState(false);
   const [isActive,setIsActive] = useState(true);
   const device = useCameraDevice("back");
@@ -70,12 +72,12 @@ export default function CameraScreen(props:CameraScreenProps){
     }
   }
 
-  const onCapturedJS = Worklets.createRunInJsFn(onCaptured);
+  const onCapturedJS = Worklets.createRunOnJS(onCaptured);
   const frameProcessor = useFrameProcessor((frame) => {
     'worklet';
     if (shouldTake.value == true && cropRegionShared.value != undefined) {
       shouldTake.value = false;
-      const result = crop(frame,{cropRegion:cropRegion,includeImageBase64:true,saveAsFile:false});
+      const result = Cropper.cropFrame(frame,{cropRegion:cropRegion,includeImageBase64:true,saveAsFile:false});
       if (result.base64) {
         onCapturedJS(result.base64);
       }
