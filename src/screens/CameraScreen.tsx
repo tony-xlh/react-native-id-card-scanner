@@ -77,7 +77,7 @@ export default function CameraScreen(props:CameraScreenProps){
     'worklet';
     if (shouldTake.value == true && cropRegionShared.value != undefined) {
       shouldTake.value = false;
-      const result = Cropper.cropFrame(frame,{cropRegion:cropRegion,includeImageBase64:true,saveAsFile:false});
+      const result = Cropper.crop(frame,{cropRegion:cropRegion,includeImageBase64:true,saveAsFile:false});
       if (result.base64) {
         onCapturedJS(result.base64);
       }
