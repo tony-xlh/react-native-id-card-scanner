@@ -12,7 +12,9 @@ Frame Processor plugins used:
 
 https://github.com/xulihang/react-native-id-card-scanner/assets/5462205/110e4f94-cfd5-4980-822a-4c5186e4ffdc
 
+## Blog
 
+[How to Build a React Native ID Card Scanner](https://www.dynamsoft.com/codepool/react-native-id-card-scanner.html)
 
 ## Getting Started
 
