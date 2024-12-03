@@ -9,9 +9,14 @@ Frame Processor plugins used:
 * vision-camera-dynamsoft-label-recognizer: use [Dynamsoft Label Recognizer](https://www.dynamsoft.com/label-recognition/overview/) to recognize the MRZ on ID cards.
 * vision-camera-dynamsoft-document-normalizer: use [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/overview/) to crop the image (optional in this case).
 
-
+Not using Dynamsoft Document Normalizer:
 
 https://github.com/xulihang/react-native-id-card-scanner/assets/5462205/110e4f94-cfd5-4980-822a-4c5186e4ffdc
+
+Using Dynamsoft Document Normalizer:
+
+https://github.com/user-attachments/assets/2550066f-96de-49f1-9ffa-9f01d31b5542
+
 
 ## Blog
 
