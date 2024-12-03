@@ -3,6 +3,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - DynamsoftCaptureVisionRouter (2.4.20)
   - DynamsoftCore (3.4.20)
+  - DynamsoftDocumentNormalizer (2.4.20)
   - DynamsoftImageProcessing (2.4.20)
   - DynamsoftLabelRecognizer (3.4.20)
   - DynamsoftLicense (3.4.20)
@@ -1570,6 +1571,32 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - VisionCameraDynamsoftDocumentNormalizer (3.3.1):
+    - DoubleConversion
+    - DynamsoftCaptureVisionRouter (= 2.4.20)
+    - DynamsoftCore (= 3.4.20)
+    - DynamsoftDocumentNormalizer (= 2.4.20)
+    - DynamsoftImageProcessing (= 2.4.20)
+    - DynamsoftLicense (= 3.4.20)
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - VisionCameraDynamsoftLabelRecognizer (3.0.0):
     - DoubleConversion
     - DynamsoftCaptureVisionRouter (= 2.4.20)
@@ -1671,6 +1698,7 @@ DEPENDENCIES:
   - RNSVG (from `../node_modules/react-native-svg`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - VisionCameraCropper (from `../node_modules/vision-camera-cropper`)
+  - VisionCameraDynamsoftDocumentNormalizer (from `../node_modules/vision-camera-dynamsoft-document-normalizer`)
   - VisionCameraDynamsoftLabelRecognizer (from `../node_modules/vision-camera-dynamsoft-label-recognizer`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -1678,6 +1706,7 @@ SPEC REPOS:
   trunk:
     - DynamsoftCaptureVisionRouter
     - DynamsoftCore
+    - DynamsoftDocumentNormalizer
     - DynamsoftImageProcessing
     - DynamsoftLabelRecognizer
     - DynamsoftLicense
@@ -1823,6 +1852,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-vision-camera"
   VisionCameraCropper:
     :path: "../node_modules/vision-camera-cropper"
+  VisionCameraDynamsoftDocumentNormalizer:
+    :path: "../node_modules/vision-camera-dynamsoft-document-normalizer"
   VisionCameraDynamsoftLabelRecognizer:
     :path: "../node_modules/vision-camera-dynamsoft-label-recognizer"
   Yoga:
@@ -1833,6 +1864,7 @@ SPEC CHECKSUMS:
   DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   DynamsoftCaptureVisionRouter: 0b794903e58db1d488309441af9f4cd47e1e1efa
   DynamsoftCore: 958f8f530011d20a6b935ec770d483c4668e6929
+  DynamsoftDocumentNormalizer: 1b83189e072844c5f3e32aeca626fc209a4d99a5
   DynamsoftImageProcessing: 36a0ebede82ffebec815465d0a617c33867eb15a
   DynamsoftLabelRecognizer: 6040624c2e8310e4b18d5460d0be10babca9a612
   DynamsoftLicense: fca251e77d7171de39e7b316f992cb19307b96b5
@@ -1905,6 +1937,7 @@ SPEC CHECKSUMS:
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   VisionCamera: b0bf2df4e845825f03e04c025c9b8283a9c61bf7
   VisionCameraCropper: 0c74e78aaa18126303e309a8e69cf3662b9763a2
+  VisionCameraDynamsoftDocumentNormalizer: d80a5875251f8d220ee04111f2cc4cb3602057d2
   VisionCameraDynamsoftLabelRecognizer: 43284b679351949c59b8749f39d339621574c4b2
   Yoga: a1d7895431387402a674fd0d1c04ec85e87909b8
 
