@@ -22,7 +22,7 @@
     "react-native-vision-camera": "^4.5.1",
     "react-native-worklets-core": "^1.3.3",
     "vision-camera-cropper": "^1.3.0",
-    "vision-camera-dynamsoft-label-recognizer": "^2.1.1"
+    "vision-camera-dynamsoft-label-recognizer": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

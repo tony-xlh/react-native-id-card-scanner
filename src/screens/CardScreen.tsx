@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, ScrollView, Text, Pressable, Image, Button, TextInput, Alert } from "react-native"
 import { IDCardManager, ParsedResult, ScannedIDCard } from "../utils/IDCardManager";
-import { decodeBase64, initLicense, updateTemplate, useCustomModel } from "vision-camera-dynamsoft-label-recognizer";
+import { decodeBase64, initLicense } from "vision-camera-dynamsoft-label-recognizer";
 import { parse } from "mrz";
 import { TextButton } from "../components/TextButton";
 
@@ -119,13 +119,6 @@ export default function CardScreen(props:CardScreenProps){
       if (!success) {
         Alert.alert("","License for the MRZ Reader is invalid.");
       }
-      try {
-        await useCustomModel({customModelFolder:"MRZ",customModelFileNames:["MRZ"]});
-        await updateTemplate("{\"CharacterModelArray\":[{\"DirectoryPath\":\"\",\"Name\":\"MRZ\"}],\"LabelRecognizerParameterArray\":[{\"Name\":\"default\",\"ReferenceRegionNameArray\":[\"defaultReferenceRegion\"],\"CharacterModelName\":\"MRZ\",\"LetterHeightRange\":[5,1000,1],\"LineStringLengthRange\":[30,44],\"LineStringRegExPattern\":\"([ACI][A-Z<][A-Z<]{3}[A-Z0-9<]{9}[0-9][A-Z0-9<]{15}){(30)}|([0-9]{2}[(01-12)][(01-31)][0-9][MF<][0-9]{2}[(01-12)][(01-31)][0-9][A-Z<]{3}[A-Z0-9<]{11}[0-9]){(30)}|([A-Z<]{0,26}[A-Z]{1,3}[(<<)][A-Z]{1,3}[A-Z<]{0,26}<{0,26}){(30)}|([ACIV][A-Z<][A-Z<]{3}([A-Z<]{0,27}[A-Z]{1,3}[(<<)][A-Z]{1,3}[A-Z<]{0,27}){(31)}){(36)}|([A-Z0-9<]{9}[0-9][A-Z<]{3}[0-9]{2}[(01-12)][(01-31)][0-9][MF<][0-9]{2}[(01-12)][(01-31)][0-9][A-Z0-9<]{8}){(36)}|([PV][A-Z<][A-Z<]{3}([A-Z<]{0,35}[A-Z]{1,3}[(<<)][A-Z]{1,3}[A-Z<]{0,35}<{0,35}){(39)}){(44)}|([A-Z0-9<]{9}[0-9][A-Z<]{3}[0-9]{2}[(01-12)][(01-31)][0-9][MF<][0-9]{2}[(01-12)][(01-31)][0-9][A-Z0-9<]{14}[A-Z0-9<]{2}){(44)}\",\"MaxLineCharacterSpacing\":130,\"TextureDetectionModes\":[{\"Mode\":\"TDM_GENERAL_WIDTH_CONCENTRATION\",\"Sensitivity\":8}],\"Timeout\":9999}],\"LineSpecificationArray\":[{\"BinarizationModes\":[{\"BlockSizeX\":30,\"BlockSizeY\":30,\"Mode\":\"BM_LOCAL_BLOCK\",\"MorphOperation\":\"Close\"}],\"LineNumber\":\"\",\"Name\":\"defaultTextArea->L0\"}],\"ReferenceRegionArray\":[{\"Localization\":{\"FirstPoint\":[0,0],\"SecondPoint\":[100,0],\"ThirdPoint\":[100,100],\"FourthPoint\":[0,100],\"MeasuredByPercentage\":1,\"SourceType\":\"LST_MANUAL_SPECIFICATION\"},\"Name\":\"defaultReferenceRegion\",\"TextAreaNameArray\":[\"defaultTextArea\"]}],\"TextAreaArray\":[{\"Name\":\"defaultTextArea\",\"LineSpecificationNameArray\":[\"defaultTextArea->L0\"]}]}");
-      } catch (error:any) {
-        console.log(error);
-        Alert.alert("Error","Failed to load model.");
-      }
     })();
   }, []);
 
@@ -200,28 +193,27 @@ export default function CardScreen(props:CardScreenProps){
   }, [props.route.params?.base64]);
 
   const recognizeIDCard = async (base64:string) => {
-    const result = await decodeBase64(base64)
-    if (result.results.length>0) {
-      let lineResults = result.results[0].lineResults;
-      if (lineResults.length >= 3) {
-        let MRZLines = [];
-        MRZLines.push(lineResults[lineResults.length - 3].text);
-        MRZLines.push(lineResults[lineResults.length - 2].text);
-        MRZLines.push(lineResults[lineResults.length - 1].text);
-        console.log(MRZLines);
-        let parsed = parse(MRZLines);
-        let result = {
-          Surname:parsed.fields.lastName ?? "",
-          GivenName:parsed.fields.firstName ?? "",
-          IDNumber:parsed.fields.documentNumber ?? "",
-          DateOfBirth:parsed.fields.birthDate ?? "",
-          DateOfExpiry:parsed.fields.expirationDate ?? ""
-        }
-        console.log("set parsed result");
-        console.log(result);
-        setParsedResult(result);
-        return;
+    const OCRResult = await decodeBase64(base64)
+    if (OCRResult.results.length>0) {
+      let lineResults = OCRResult.results[0].lineResults;
+      let MRZLines:string[] = [];
+      for (let index = 0; index < lineResults.length; index++) {
+        const lineResult = lineResults[index];
+        MRZLines = MRZLines.concat(lineResult.text.split("\n"));
       }
+      console.log(MRZLines);
+      let parsed = parse(MRZLines);
+      let result = {
+        Surname:parsed.fields.lastName ?? "",
+        GivenName:parsed.fields.firstName ?? "",
+        IDNumber:parsed.fields.documentNumber ?? "",
+        DateOfBirth:parsed.fields.birthDate ?? "",
+        DateOfExpiry:parsed.fields.expirationDate ?? ""
+      }
+      console.log("set parsed result");
+      console.log(result);
+      setParsedResult(result);
+      return;
     }
     Alert.alert("","Failed to recognize the card.");
   }
