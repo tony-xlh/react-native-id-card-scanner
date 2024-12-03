@@ -7,6 +7,7 @@ Frame Processor plugins used:
 
 * vision-camera-cropper: to crop the camera frames 
 * vision-camera-dynamsoft-label-recognizer: use [Dynamsoft Label Recognizer](https://www.dynamsoft.com/label-recognition/overview/) to recognize the MRZ on ID cards.
+* vision-camera-dynamsoft-document-normalizer: use [Dynamsoft Document Normalizer](https://www.dynamsoft.com/document-normalizer/overview/) to crop the image (optional in this case).
 
 
 
