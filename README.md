@@ -17,6 +17,7 @@ Using Dynamsoft Document Normalizer:
 
 https://github.com/user-attachments/assets/2550066f-96de-49f1-9ffa-9f01d31b5542
 
+If you do not want to use Vision Camera, you can use the [offical React Native package](https://github.com/Dynamsoft/capture-vision-react-native-samples) by Dynamsoft.
 
 ## Blog
 
